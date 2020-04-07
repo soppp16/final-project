@@ -1,0 +1,172 @@
+<!DOCTYPE html><html><head>
+<meta charset="utf-8">
+<title>Play map locations as a slideshow</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<script src="mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css" rel="stylesheet">
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+    .map-overlay-container {
+        position: absolute;
+        width: 40%;
+        top: 0;
+        left: 0;
+        padding: 10px;
+        z-index: 1;
+    }
+
+    .map-overlay {
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        background-color: #fff;
+        border-radius: 20px;
+        padding: 10px;
+        box-shadow: 1 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .map-overlay h2,
+    .map-overlay p {
+        margin: 0 0 10px;
+    }
+</style>
+
+<div id="map"></div>
+
+<div class="map-overlay-container">
+    <div class="map-overlay">
+        <h2 id="location-title"></h2>
+        <p id="location-description"></p>
+        <!--<small
+            >Text credit:
+            <a target="_blank" href="http://www.nycgo.com/neighborhoods"
+                >nycgo.com</a
+            ></small
+        >-->
+    </div>
+</div>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1Ijoic29wcHAxNiIsImEiOiJjazZsZDBxeWMwOHU4M21wYm82YTR6OHYwIn0.2k1vazFeGNVk1WnUGNzB6Q';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/soppp16/ck8c64wjg110a1ir6045b59wn',
+        center: [-123.15520, 49.25737],
+        maxZoom: 16,
+        minZoom: 9,
+        zoom: 9.68
+    });
+
+    var title = document.getElementById('location-title');
+    var description = document.getElementById('location-description');
+
+     
+    var locations = [
+        {
+            'id': '2',
+            'title': 'North Vancouver',
+            'description':
+               "Lynn Valley Care Centre, in North Vancouver, announced the first COVID-19 death in Canada on 8th March 2020. Since then, this care centre has been an epicentre of increasing confirmed cases and deaths. However, non-profits in North Vancouver continue to support the changing needs of the vulnerable communities. Harvest Project is an organization which provides support to families without income, and in poverty. All in-person programs have been suspended, so the Harvest project has been adjusting their groceries program to function without person-to-person contact. This has been done by providing grocery store gift cards to those that need them. Other societies including Hollyburn Family Services and Capilano Community Services are remaining in contact with seniors and youths via phone calls, and volunteers are providing grocery pick-up services to seniors. ",
+            'camera': {
+                center: [-123.038502, 49.337800],
+              //49.334869, -123.040573
+              //49.337800, -123.038502
+                zoom: 14.21,
+                pitch: 50
+            }
+        },
+        {
+            'id': '3',
+            'title': 'Downtown Eastside',
+            'description':
+                "In a neighbourhood with already poor living conditions, the DTES is an area with a high susceptibility in relation to COVID-19. There are currently 15,000 people at risk in this area, with 3,000 of these people being homeless, and 4,700 being tenants in high risk Single Room Occupancy hostels (SRO’s). This is making it increasingly hard for citizens to social distance in this low income area. The DTES Response has been developed in reaction to the pandemic to prevent further spread. They have mobilized resources and set up funds in support of this vulnerable population. These funds will go towards the Overdose Prevention Society, the DTES SRO Collaborative, the Western Aboriginal Harm Reduction Society and other supporting organizations.",
+            'camera': {
+                center: [-123.099569, 49.282775],
+              //49.283164, -123.089895
+              //49.282775, -123.099569
+                bearing: -8.9,
+                zoom: 13.68
+            }
+        },
+        {
+            'id': '1',
+            'title': 'White Rock',
+            'description':
+                'Evergreen Heights Care Home, in White Rock, has two confirmed cases of COVID-19, one in a staff member and the other in a resident. White Rock has provided resources for its senior citizens on the White Rock City website. The Better at Home program provides seniors with aid in day-to-day tasks. Also, Alexander Neighbourhood House has produced a phone tree to encourage community support among White Rock residents. Volunteers of the Semiahmoo Peninsula are available to help deliver groceries to seniors or other vulnerable citizens. White Rock City Council is also taking action to prevent further spread by temporarily closing all public and recreational spaces, including White Rock Pier. ',
+            'camera': {
+                center: [-122.804544, 49.025443],
+              //49.025443, -122.804544
+                bearing: 25.3,
+                zoom: 13.5
+            }
+        },
+
+    ];
+
+              
+    function highlightBorough(code) {
+        // Only show the polygon feature that cooresponds to `borocode` in the data
+        map.setFilter('highlight', ['==', 'borocode', code]);
+    }
+
+    function playback(index) {
+        title.textContent = locations[index].title;
+        description.textContent = locations[index].description;
+
+        highlightBorough(locations[index].id ? locations[index].id : '');
+
+        // Animate the map position based on camera properties
+        map.flyTo(locations[index].camera);
+
+        map.once('moveend', function() {
+            // Duration the slide is on screen after interaction
+            window.setTimeout(function() {
+                // Increment index
+                index = index + 1 === locations.length ? 0 : index + 1;
+                playback(index);
+            }, 7000); // After callback, show the location for 3 seconds.
+          //3000
+        });
+    }
+
+    // Display the last title/description first
+    title.textContent = locations[locations.length - 1].title;
+    description.textContent = locations[locations.length - 1].description;
+
+    map.on('load', function() {
+        map.addSource('boroughs', {
+            'type': 'vector',
+            'url': 'mapbox://mapbox.8ibmsn6u'
+        });
+        map.addLayer(
+            {
+                'id': 'highlight',
+                'type': 'fill',
+                'source': 'boroughs',
+                'source-layer': 'original',
+                'paint': {
+                    'fill-color': '#fd6b50',
+                    'fill-opacity': 0.25
+                },
+                'filter': ['==', 'borocode', '']
+            },
+            'settlement-subdivision-label'
+        ); // Place polygon under the neighborhood labels.
+
+        // Start the playback animation for each borough
+        playback(0);
+    });
+        
+      
+
+  
+ 
+  
+</script>
+
+
+
+</body></html>
