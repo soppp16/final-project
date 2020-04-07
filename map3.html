@@ -1,0 +1,317 @@
+<!DOCTYPE html><html><head>
+<meta charset="utf-8">
+<title>Display driving directions</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<script src="mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css" rel="stylesheet">
+  <script src="turf.min.js"></script>
+<style>
+  .mapboxgl-popup {
+max-width: 400px;
+font: 11px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+  
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<script src="mapbox-gl-directions.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css" type="text/css">
+  
+  
+<div id="map"></div>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1Ijoic29wcHAxNiIsImEiOiJjazZsZDBxeWMwOHU4M21wYm82YTR6OHYwIn0.2k1vazFeGNVk1WnUGNzB6Q';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/soppp16/ck8c64wjg110a1ir6045b59wn',
+      //mapbox://styles/mapbox/streets-v11
+        center: [-123.15520, 49.25737],
+        zoom: 10
+    });
+  
+ 
+   map.on('load', function() {
+map.addSource('places', {
+'type': 'geojson',
+'data': {
+      type: 'FeatureCollection',
+      features: [{
+          type: 'Feature',
+          properties: {
+            Name: 'Urgent Care Centre and Sleep Disorders program -- UBC Hospital',
+            Address: '2211 Wesbrook Mall'
+          
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.245833, 49.264167]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'B.C. Women" Hospital & Health Centre',
+            Address: '4500 Oak St'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.1242, 49.24417]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'BC Cancer Agency',
+            Address: '600 W 10th Ave'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.1175, 49.2622222]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'British Columbia" Children Hospital',
+            Address: '4480 Oak St'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.1255556, 49.24444]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Mount Saint Joseph Hospital',
+            Address: '3080 Prince Edward St'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.0952778, 49.2577778]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'St. Paul"s Hospital',
+            Address: '1081 Burrard St'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.1280556, 49.2805556]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'St. Vincent"s Hospitals Langara',
+            Address: '255 W 62nd Ave'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.110833, 49.214722]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Sunny Hill Health Centre for Children',
+            Address: '3644 Slocan St'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.048333, 49.251944]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Vancouver General Hospital',
+            Address: '899 W 12th Ave'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.123056, 49.261111]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Burnaby General Hospital',
+            Address: '83935 Kincaid St'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.015, 49.249444]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Riverview Hospital',
+            Address: '2601 Lougheed Hwy'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.805556, 49.246667]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Delta Hospital',
+            Address: '5800 Mountain View Blvd'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.061111, 49.085556]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Langley Memorial Hospital',
+            Address: '22051 Fraser Hwy'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.611944, 49.093611]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Ridge Meadows Hospital & Health Care Centre',
+            Address: '11666 Laity St'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.629167, 49.215556]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Royal Columbian Hospital',
+            Address: '330 E Columbia St'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.890278, 49.226389]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Lions Gate Hospital',
+            Address: '231 15th St E'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.068333, 49.320833]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Eagle Ridge Hospital',
+            Address: '475 Guildford Way'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.823333, 49.285]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Richmond Hospital',
+            Address: '7000 Westminster Hwy'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-123.146667, 49.168889]
+          }
+        },
+        {
+          type: 'Feature',
+          properties: {
+            Name: 'Surrey Memorial Hospital',
+            Address: '13750 96 Ave'
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.841667, 49.176111]
+    }
+}
+]
+}
+});
+     
+
+       
+      
+map.addLayer({
+'id': 'places',
+'type': 'symbol',
+'source': 'places',
+'layout': {
+'icon-image': 'hospital-15',
+'icon-allow-overlap': true
+}
+});
+  
+  var popup = new mapboxgl.Popup({
+closeButton: false,
+closeOnClick: false
+});
+ 
+map.on('mouseenter', 'places', function(e) {
+// Change the cursor style as a UI indicator.
+map.getCanvas().style.cursor = 'pointer';
+ 
+var coordinates = e.features[0].geometry.coordinates.slice();
+var description = e.features[0].properties.Name;
+  
+  
+while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+}
+ 
+// Populate the popup and set its coordinates
+// based on the feature found.
+popup
+.setLngLat(coordinates)
+.setHTML(description)
+.addTo(map);
+});
+ 
+map.on('mouseleave', 'places', function() {
+map.getCanvas().style.cursor = '';
+popup.remove();
+});
+});
+  
+
+// pop2 
+     
+
+     
+  
+  // ok 
+    map.addControl(
+        new MapboxDirections({
+            accessToken: mapboxgl.accessToken
+        }),
+        'top-left'
+    );
+  
+</script>
+
+
+
+</body></html>
